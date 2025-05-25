@@ -32,13 +32,12 @@ public class Sign_Up extends JPanel {
         JTextField fullNameField = new JTextField();
         JLabel emailLabel = new JLabel("EMAIL");
         JTextField emailField = new JTextField();
-        JLabel roleLabel = new JLabel("ROLE");
-        JTextField roleField = new JTextField();
+
         JLabel passLabel = new JLabel("PASSWORD");
         JPasswordField passwordField = new JPasswordField();
 
-        JLabel[] labels = { nameLabel, emailLabel, roleLabel, passLabel };
-        JTextField[] fields = { fullNameField, emailField, roleField };
+        JLabel[] labels = { nameLabel, emailLabel,  passLabel };
+        JTextField[] fields = { fullNameField, emailField};
         for (JLabel label : labels) UIUtils.styleLabel(label);
         for (JTextField field : fields) UIUtils.styleField(field);
         UIUtils.styleField(passwordField);
@@ -59,7 +58,7 @@ public class Sign_Up extends JPanel {
 
         signUp.addActionListener(e -> {
             if (fullNameField.getText().trim().isEmpty() || emailField.getText().trim().isEmpty() ||
-                    roleField.getText().trim().isEmpty() || new String(passwordField.getPassword()).trim().isEmpty()) {
+                   new String(passwordField.getPassword()).trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
             } else {
                 System.out.println("Registered: " + fullNameField.getText().trim());
@@ -77,8 +76,7 @@ public class Sign_Up extends JPanel {
         formPanel.add(fullNameField);
         formPanel.add(emailLabel);
         formPanel.add(emailField);
-        formPanel.add(roleLabel);
-        formPanel.add(roleField);
+
         formPanel.add(passLabel);
         formPanel.add(passwordField);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
