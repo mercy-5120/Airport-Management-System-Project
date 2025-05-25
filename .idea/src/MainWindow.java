@@ -8,7 +8,7 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        setIconImage(new ImageIcon("Assets/logo.png").getImage());
+        setIconImage(new ImageIcon("Src/Assets/logo.png").getImage());
 
         CardLayout cardLayout = new CardLayout();
         JPanel container = new JPanel(cardLayout);

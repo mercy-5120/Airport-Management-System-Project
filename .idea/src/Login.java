@@ -11,7 +11,7 @@ public class Login extends JPanel {
         JPanel imagePanel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(new ImageIcon("Assets/airport.jpg").getImage(), 0, 0, getWidth(), getHeight(), this);
+                g.drawImage(new ImageIcon("Src/Assets/airport.jpg").getImage(), 0, 0, getWidth(), getHeight(), this);
             }
 
             public Dimension getPreferredSize() {
