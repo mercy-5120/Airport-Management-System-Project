@@ -12,12 +12,13 @@ public class UIUtils {
     private static final Color PRIMARY_COLOR = new Color(60, 63, 65);
     private static final Color HOVER_COLOR = new Color(90, 90, 90);
     private static final Color FIELD_BORDER_COLOR = new Color(200, 200, 200);
+    public static final Color LINK_COLOR = Color.decode("#5C4E4E");
 
     public static void styleField(JTextField field) {
         field.setFont(DEFAULT_FONT);
         field.setBackground(Color.WHITE);
         field.setForeground(Color.BLACK);
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         field.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(FIELD_BORDER_COLOR, 1, true),
                 new EmptyBorder(8, 10, 8, 10)
@@ -36,11 +37,12 @@ public class UIUtils {
         button.setForeground(Color.WHITE);
         button.setBackground(PRIMARY_COLOR);
         button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(200, 40));
+        button.setPreferredSize(new Dimension(350, 40));
+        button.setMaximumSize(new Dimension(350, 40));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // Hover effect
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -52,5 +54,35 @@ public class UIUtils {
                 button.setBackground(PRIMARY_COLOR);
             }
         });
+    }
+
+    public static void styleTitle(JLabel label) {
+        label.setFont(new Font("Inter", Font.BOLD, 24));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+    }
+
+    public static JLabel createLinkLabel(String text) {
+        JLabel label = new JLabel("<HTML><U>" + text + "</U></HTML>");
+        label.setForeground(LINK_COLOR);
+        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return label;
+    }
+
+    public static JLabel createShowPasswordToggle(JPasswordField passwordField) {
+        JLabel togglePass = createLinkLabel("Show Password");
+        togglePass.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (passwordField.getEchoChar() == 0) {
+                    passwordField.setEchoChar('•');
+                    togglePass.setText("<HTML><U>Show Password</U></HTML>");
+                } else {
+                    passwordField.setEchoChar((char) 0);
+                    togglePass.setText("<HTML><U>Hide Password</U></HTML>");
+                }
+            }
+        });
+        return togglePass;
     }
 }
