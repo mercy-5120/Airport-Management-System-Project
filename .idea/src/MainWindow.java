@@ -17,6 +17,7 @@ public class MainWindow extends JFrame {
         container.add(new Sign_Up(cardLayout, container), "signup");
 
         add(container);
+        pack();
         setVisible(true);
     }
 

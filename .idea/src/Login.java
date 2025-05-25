@@ -28,10 +28,26 @@ public class Login extends JPanel {
         JLabel titleLabel = new JLabel("USER LOGIN");
         UIUtils.styleTitle(titleLabel);
 
+        JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel emailLabel = new JLabel("EMAIL");
+        emailPanel.add(emailLabel);
+        UIUtils.stylePanel(emailPanel);
+
+        JPanel emailFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JTextField emailField = new JTextField();
+        emailFieldPanel.add(emailField);
+        UIUtils.stylePanel(emailFieldPanel);
+
+
+        JPanel passPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel passLabel = new JLabel("PASSWORD");
+        passPanel.add(passLabel);
+        UIUtils.stylePanel(passPanel);
+
+        JPanel passFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPasswordField passwordField = new JPasswordField();
+        passFieldPanel.add(passwordField);
+        UIUtils.stylePanel(passFieldPanel);
 
         UIUtils.styleLabel(emailLabel);
         UIUtils.styleLabel(passLabel);
@@ -65,10 +81,10 @@ public class Login extends JPanel {
         });
 
         formPanel.add(titleLabel);
-        formPanel.add(emailLabel);
-        formPanel.add(emailField);
-        formPanel.add(passLabel);
-        formPanel.add(passwordField);
+        formPanel.add(emailPanel);
+        formPanel.add(emailFieldPanel);
+        formPanel.add(passPanel);
+        formPanel.add(passFieldPanel);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         formPanel.add(linkPanel);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));

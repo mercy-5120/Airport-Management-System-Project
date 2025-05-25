@@ -23,18 +23,44 @@ public class Sign_Up extends JPanel {
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.setBackground(Color.WHITE);
 
         JLabel titleLabel = new JLabel("USER REGISTRATION");
         UIUtils.styleTitle(titleLabel);
 
+        JPanel namePanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel nameLabel = new JLabel("FULL NAME");
-        JTextField fullNameField = new JTextField();
-        JLabel emailLabel = new JLabel("EMAIL");
-        JTextField emailField = new JTextField();
+        namePanel.add(nameLabel);
+        UIUtils.stylePanel(namePanel);
 
+        JPanel nameFieldPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JTextField fullNameField = new JTextField();
+        nameFieldPanel.add(fullNameField);
+        UIUtils.stylePanel(nameFieldPanel);
+
+        JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel emailLabel = new JLabel("EMAIL");
+        emailPanel.add(emailLabel);
+        UIUtils.stylePanel(emailPanel);
+
+        JPanel emailFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JTextField emailField = new JTextField();
+        emailFieldPanel.add(emailField);
+        UIUtils.stylePanel(emailFieldPanel);
+
+
+        JPanel passwordPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel passLabel = new JLabel("PASSWORD");
+        passwordPanel.add(passLabel);
+        UIUtils.stylePanel(passwordPanel);
+
+
+        JPanel passFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPasswordField passwordField = new JPasswordField();
+        passFieldPanel.add(passwordField);
+        UIUtils.stylePanel(passFieldPanel);
+
 
         JLabel[] labels = { nameLabel, emailLabel,  passLabel };
         JTextField[] fields = { fullNameField, emailField};
@@ -45,13 +71,11 @@ public class Sign_Up extends JPanel {
         JLabel signIn = UIUtils.createLinkLabel("Sign in");
         JLabel togglePass = UIUtils.createShowPasswordToggle(passwordField);
 
-        JPanel linkPanel = new JPanel();
-        linkPanel.setLayout(new BoxLayout(linkPanel, BoxLayout.X_AXIS));
-        linkPanel.setOpaque(false);
-        linkPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        linkPanel.add(signIn);
-        linkPanel.add(Box.createHorizontalGlue());
-        linkPanel.add(togglePass);
+        JPanel linkPanel = new JPanel(new BorderLayout());
+        linkPanel.setSize(new Dimension(80, 20));
+        linkPanel.setBackground(Color.WHITE);
+        linkPanel.add(signIn,BorderLayout.WEST);
+        linkPanel.add(togglePass, BorderLayout.EAST);
 
         JButton signUp = new JButton("Sign Up");
         UIUtils.styleButton(signUp);
@@ -72,13 +96,12 @@ public class Sign_Up extends JPanel {
         });
 
         formPanel.add(titleLabel);
-        formPanel.add(nameLabel);
-        formPanel.add(fullNameField);
-        formPanel.add(emailLabel);
-        formPanel.add(emailField);
-
-        formPanel.add(passLabel);
-        formPanel.add(passwordField);
+        formPanel.add(namePanel);
+        formPanel.add(nameFieldPanel);
+        formPanel.add(emailPanel);
+        formPanel.add(emailFieldPanel);
+        formPanel.add(passwordPanel);
+        formPanel.add(passFieldPanel);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         formPanel.add(linkPanel);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
