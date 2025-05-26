@@ -86,6 +86,9 @@ public class Sign_Up extends JPanel {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
             } else {
                 System.out.println("Registered: " + fullNameField.getText().trim());
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                topFrame.setContentPane(new PassengerDashboard(emailField.getText().trim()));
+                topFrame.revalidate();
             }
         });
 
