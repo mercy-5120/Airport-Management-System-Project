@@ -42,6 +42,7 @@ Built using Java with OOP principles, this system demonstrates the application o
 - GitHub Repository: [Airport Management System](https://github.com/mercy-5120/Airport-Management-System-Project.git)
 - Figma UI Design: [View Mockups](https://www.figma.com/design/4vuQgpjr9h9QaKsm4GMq5z/MOCKUPS?node-id=0-1&p=f&t=c0LeSwrPXVAVcgfP-0)
 - Jira Board: [Airport Management System - Jira](https://airport-management-system.atlassian.net/jira/your-work)
+- Draw.io: [UML Diagrams](https://drive.google.com/file/d/1Y46WwXivGfA6Oc_mxjZpvkSlx6e2h3UO/view?usp=sharing)
 
 ---
 
