@@ -12,7 +12,7 @@ public class PassengerDashboard extends JPanel {
         sidebar.setPreferredSize(new Dimension(150, 0));
 
         //logo
-        ImageIcon originalIcon = new ImageIcon("Assets/logo.png");
+        ImageIcon originalIcon = new ImageIcon("Src/Assets/logo.png");
         Image scaledImage = originalIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(scaledImage));
         logo.setAlignmentX(Component.CENTER_ALIGNMENT);
