@@ -8,7 +8,7 @@ public class PassengerDashboard3 extends JPanel {
         this.parentFrame = parentFrame;
         setLayout(new BorderLayout());
 
-        // Sidebar (same style)
+        // Sidebar Section
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(new Color(92, 78, 78));
@@ -42,7 +42,6 @@ public class PassengerDashboard3 extends JPanel {
                     parentFrame.revalidate();
                 });
             }
-            // You can add more button listeners here if needed
 
             sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
             sidebar.add(btn);

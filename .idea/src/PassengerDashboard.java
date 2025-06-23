@@ -6,7 +6,7 @@ public class PassengerDashboard extends JPanel {
     public PassengerDashboard(String username, JFrame parentFrame) {
         setLayout(new BorderLayout());
 
-        // Sidebar
+        // Sidebar section
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(new Color(92, 78, 78));
@@ -42,16 +42,18 @@ public class PassengerDashboard extends JPanel {
             // Link CANCEL FLIGHT to PassengerDashboard2
             if (btnText.equals("CANCEL FLIGHT")) {
                 btn.addActionListener(e -> {
-                    parentFrame.setContentPane(new PassengerDashboard2(username, parentFrame));
-                    parentFrame.revalidate();
+                    CardLayout layout = (CardLayout) parentFrame.getContentPane().getLayout();
+                    parentFrame.getContentPane().add(new PassengerDashboard2(username, parentFrame), "PassengerDashboard2");
+                    layout.show(parentFrame.getContentPane(), "PassengerDashboard2");
                 });
             }
 
             // Link BOOKING HISTORY to PassengerDashboard4
             if (btnText.equals("BOOKING HISTORY")) {
                 btn.addActionListener(e -> {
-                    parentFrame.setContentPane(new PassengerDashboard4(username, parentFrame));
-                    parentFrame.revalidate();
+                    CardLayout layout = (CardLayout) parentFrame.getContentPane().getLayout();
+                    parentFrame.getContentPane().add(new PassengerDashboard4(username, parentFrame), "PassengerDashboard4");
+                    layout.show(parentFrame.getContentPane(), "PassengerDashboard4");
                 });
             }
 

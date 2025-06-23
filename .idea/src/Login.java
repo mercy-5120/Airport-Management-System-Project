@@ -70,10 +70,16 @@ public class Login extends JPanel {
             if (emailField.getText().trim().isEmpty() || new String(passwordField.getPassword()).trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
             } else {
-                System.out.println("Welcome: " + emailField.getText().trim());
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                topFrame.setContentPane(new PassengerDashboard(emailField.getText().trim()));
-                topFrame.revalidate();
+                String email = emailField.getText().trim();
+                JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                PassengerDashboard dashboard = new PassengerDashboard(email, parentFrame);
+                Container parent = parentFrame.getContentPane();
+                parent.removeAll();
+                parent.setLayout(new CardLayout());
+                parent.add(dashboard, "dashboard");
+                ((CardLayout) parent.getLayout()).show(parent, "dashboard");
+                parentFrame.revalidate();
+                parentFrame.repaint();
             }
         });
 

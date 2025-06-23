@@ -6,7 +6,7 @@ public class PassengerDashboard4 extends JPanel {
     public PassengerDashboard4(String username, JFrame parentFrame) {
         setLayout(new BorderLayout());
 
-        // Sidebar
+        // Sidebar Section
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(new Color(92, 78, 78));
