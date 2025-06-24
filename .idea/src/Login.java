@@ -66,11 +66,20 @@ public class Login extends JPanel {
         JButton loginButton = new JButton("Login");
         UIUtils.styleButton(loginButton);
 
+        // LOGIN LOGIC
         loginButton.addActionListener(e -> {
+            String email = emailField.getText().trim();
+            String password = new String(passwordField.getPassword()).trim();
             if (emailField.getText().trim().isEmpty() || new String(passwordField.getPassword()).trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
+            }
+            else if (email.equalsIgnoreCase("admin@skyport.com") && password.equals("admin123")) {
+                if (container.getComponentCount() < 3) {
+                    container.add(new AdminDashboard(layout, container), "adminDashboard");
+                }
+                layout.show(container, "adminDashboard");
             } else {
-                String email = emailField.getText().trim();
+
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
                 PassengerDashboard dashboard = new PassengerDashboard(email, parentFrame);
                 Container parent = parentFrame.getContentPane();
