@@ -1,12 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
-import UI.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
+import SkyportManager.SkyPortManager;
+import UI.*;
+import dbUtil.DatabaseManager;
 
 public class MainWindow extends JFrame {
-    public MainWindow() {
+    public MainWindow(SkyPortManager manager) {
         setTitle("SkyPort Limited");
-        setSize(500, 760);
+        setSize(1000, 800); // updated for better dashboard space
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -15,15 +19,37 @@ public class MainWindow extends JFrame {
         CardLayout cardLayout = new CardLayout();
         JPanel container = new JPanel(cardLayout);
 
-        container.add(new LoginForm(cardLayout, container), "login");
-        container.add(new SignUpForm(cardLayout, container), "signup");
+        // Pass the manager to forms:
+        container.add(new LoginForm(cardLayout, container, manager), "login");
+        container.add(new SignUpForm(cardLayout, container, manager), "signup");
+
+        // Add dashboards to the container so CardLayout knows them:
+//        container.add(new PassengerDashboard("Passenger", this), "PassengerDashboard");
+        container.add(new AdminDashboard(cardLayout, container, manager), "AdminDashboard");
 
         add(container);
-        pack();
+
+        cardLayout.show(container, "login");  // start with login screen
         setVisible(true);
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(MainWindow::new);
+        DatabaseManager dbManager = new DatabaseManager();
+        try {
+            dbManager.connect();
+            Connection conn = dbManager.getConnection();
+
+            // Build your SkyPortManager with the established connection:
+            SkyPortManager manager = new SkyPortManager(conn);
+
+            // Start the Swing UI, passing manager to MainWindow
+            SwingUtilities.invokeLater(() -> new MainWindow(manager));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to connect to database: " + e.getMessage(),
+                    "Database Connection Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(1); // Exit if DB connection fails
+        }
     }
 }

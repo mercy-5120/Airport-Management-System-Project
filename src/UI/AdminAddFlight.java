@@ -1,10 +1,19 @@
 package UI;
 
+import Models.Flight;
+import Models.FlightStatus;
+import SkyportManager.SkyPortManager;
+
 import javax.swing.*;
 import java.awt.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class AdminAddFlight extends JPanel {
-    public AdminAddFlight() {
+    private final SkyPortManager manager;
+
+    public AdminAddFlight(SkyPortManager manager) {
+        this.manager = manager;
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE);
 
@@ -69,10 +78,53 @@ public class AdminAddFlight extends JPanel {
         add(price, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
+        add(new JLabel("STATUS:"), gbc);
+        JComboBox<FlightStatus> statusCombo = new JComboBox<>(FlightStatus.values());
+        gbc.gridx = 1;
+        add(statusCombo, gbc);
+
+        gbc.gridx = 0; gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         JButton addBtn = new JButton("ADD");
         UIUtils.styleButton(addBtn);
         add(addBtn, gbc);
+
+        addBtn.addActionListener(e -> {
+            try {
+                String flightNumber = flightNo.getText().trim();
+                String flightOrigin = origin.getText().trim();
+                String flightDestination = destination.getText().trim();
+                String flightDeparture = departure.getText().trim();
+                String flightArrival = arrival.getText().trim();
+                LocalDate flightDate = LocalDate.parse(date.getText().trim());
+                int flightSeats = Integer.parseInt(seats.getText().trim());
+                BigDecimal flightPrice = BigDecimal.valueOf(Double.parseDouble(price.getText().trim()));
+                FlightStatus flightStatus = (FlightStatus) statusCombo.getSelectedItem();
+
+                if (flightNumber.isEmpty() || flightOrigin.isEmpty() || flightDestination.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                Flight flight = new Flight(
+                        flightNumber,
+                        flightOrigin,
+                        flightDeparture,
+                        flightDestination,
+                        flightArrival,
+                        flightDate,
+                        flightSeats,
+                        flightPrice
+                );
+
+                manager.getAdminService().addFlight(flight);
+
+                JOptionPane.showMessageDialog(this, "Flight added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error adding flight: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 }

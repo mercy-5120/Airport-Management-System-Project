@@ -1,10 +1,15 @@
 package UI;
 
+import Models.Passenger;
+import SkyportManager.SkyPortManager;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
 public class AdmView extends JPanel {
-    public AdmView() {
+    public AdmView(SkyPortManager manager) {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
@@ -13,11 +18,29 @@ public class AdmView extends JPanel {
         title.setForeground(new Color(218, 165, 32));
         add(title, BorderLayout.NORTH);
 
-        // Table for passengers (placeholder data)
-        String[] columns = {"PASSENGER ID", "NAME", "TICKET ID", "FLIGHT ID", "DATE", "STATUS", "PASSPORT NUMBER"};
-        Object[][] data = {};
-        JTable table = new JTable(data, columns);
+        // Define table columns
+        String[] columns = {"PASSENGER ID", "NAME", "EMAIL"};
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // make table read-only
+            }
+        };
+        JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
+
+        try {
+            // Fetch passengers from the database
+            List<Passenger> passengers = manager.getAdminService().getAllPassengers();
+            for (Passenger p : passengers) {
+                Object[] row = { p.getFullname(), p.getEmail()};
+                tableModel.addRow(row);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading passengers: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

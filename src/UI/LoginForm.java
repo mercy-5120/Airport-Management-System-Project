@@ -2,8 +2,8 @@ package UI;
 
 import Models.Role;
 import Models.User;
-import Repositories.UserRepository;
-import Services.UserService;
+import Services.ILoginService;
+import SkyportManager.SkyPortManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,9 +11,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class LoginForm extends JPanel {
-    public LoginForm(CardLayout layout, JPanel container) {
+    private SkyPortManager manager;
+    public LoginForm(CardLayout layout, JPanel container,SkyPortManager manager) {
         setLayout(new BorderLayout());
-
+this.manager=manager;
         // image
         JPanel imagePanel = new JPanel() {
             protected void paintComponent(Graphics g) {
@@ -73,32 +74,36 @@ public class LoginForm extends JPanel {
         JButton loginButton = new JButton("Login");
         UIUtils.styleButton(loginButton);
 
-      UserService userService=new UserRepository() ;
         loginButton.addActionListener(e -> {
-            String email = emailField.getText().trim();
-            String password = new String(passwordField.getPassword());
-            if (emailField.getText().trim().isEmpty() || new String(passwordField.getPassword()).trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            try {
+                String email = emailField.getText().trim();
+                String password = new String(passwordField.getPassword());
 
-            User user = userService.loginUser(email, password);
-
-            if (user != null) {
-                if(user.getRole()== Role.PASSENGER){
-                    JOptionPane.showMessageDialog(this, "Login Successful.", "Login Successful", JOptionPane.INFORMATION_MESSAGE);
-                   layout.show(container, "passenger");
-                   this.setVisible(false);
-                }else {
-                    layout.show(container, "admin");
+                if (email.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
-            }else {
-                JOptionPane.showMessageDialog(this, "Login Failed.", "Login Failed", JOptionPane.ERROR_MESSAGE);
-                return;
+
+                User user = manager.getLoginService().loginUser(email, password);
+
+                if (user != null) {
+                    JOptionPane.showMessageDialog(this, "Login successful. Welcome, " + user.getFullname() + "!", "Login Successful", JOptionPane.INFORMATION_MESSAGE);
+
+                    if (user.getRole() == Role.passenger) {
+                        layout.show(container, "PassengerDashboard");
+                    } else if (user.getRole() == Role.admin) {
+                        layout.show(container, "AdminDashboard");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid email or password.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace(); // See exact error in terminal
+                JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-
         });
+
+
 
         signUpLink.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {

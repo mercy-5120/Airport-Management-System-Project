@@ -3,7 +3,7 @@ package UI;
 import Models.Passenger;
 import PasswordUtil.PasswordUtil;
 import Repositories.PassengerRepository;
-import Repositories.UserRepository;
+import SkyportManager.SkyPortManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +15,11 @@ import java.awt.event.MouseEvent;
 public class SignUpForm extends JPanel {
     private CardLayout layout;      // Add fields
     private JPanel container;
-
-    public SignUpForm(CardLayout layout, JPanel container) {
+    private SkyPortManager manager;
+    public SignUpForm(CardLayout layout, JPanel container,SkyPortManager manager) {
         this.layout = layout;        // Assign fields
         this.container = container;
+        this.manager=manager;
 
         setLayout(new BorderLayout());
 
@@ -96,39 +97,38 @@ public class SignUpForm extends JPanel {
         UIUtils.styleButton(signUp);
 
         // Sign Up button listener
-        signUp.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String fullname = fullNameField.getText().trim();
-                String email = emailField.getText().trim();
-                String password = new String(passwordField.getPassword());
+        signUp.addActionListener(e -> {
+            String fullname = fullNameField.getText().trim();
+            String email = emailField.getText().trim();
+            String password = new String(passwordField.getPassword());
 
-                if (fullname.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    JOptionPane.showMessageDialog(SignUpForm.this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+            if (fullname.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(SignUpForm.this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-                String hashedPassword= PasswordUtil.encryptPassword(password);
-
-                UserRepository userRepository = new UserRepository();
-                if(userRepository.findbyEmail(email)!=null){
+            try {
+                // Check if passenger already exists
+                Passenger existingPassenger = manager.getPassengerService().getPassengerByEmail(email);
+                if (existingPassenger != null) {
                     JOptionPane.showMessageDialog(SignUpForm.this, "Email already exists.", "Email already exists", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
-                Passenger newPassenger=new Passenger(fullname,email,hashedPassword);
-                PassengerRepository passengerService =new PassengerRepository();
-                boolean success= passengerService.registerPassenger(newPassenger);
+                String hashedPassword = PasswordUtil.encryptPassword(password);
 
-                if(success){
-                    JOptionPane.showMessageDialog(SignUpForm.this, "Registration successful.", "Registration Successful", JOptionPane.INFORMATION_MESSAGE);
-                }else{
-                    JOptionPane.showMessageDialog(SignUpForm.this, "Registration failed.", "Registration Failed", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                    // Switch to login panel after successful registration
-                    layout.show(container, "login");
-                }
+                // Register passenger
+                 manager.getPassengerService().registerPassenger(fullname, email, hashedPassword);
 
+                JOptionPane.showMessageDialog(SignUpForm.this, "Registration successful.", "Registration Successful", JOptionPane.INFORMATION_MESSAGE);
+
+                // Switch to login panel
+                layout.show(container, "login");
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(SignUpForm.this, "Registration failed: " + ex.getMessage(), "Registration Failed", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         // Sign In label listener (to switch to login panel)
