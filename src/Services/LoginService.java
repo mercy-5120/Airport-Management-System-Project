@@ -6,8 +6,10 @@ import Models.User;
 import Repositories.AdminRepository;
 import Repositories.LoginRepository;
 import Repositories.PassengerRepository;
+import PasswordUtil.PasswordUtil;
 
-public class LoginService implements ILoginService{
+
+public class LoginService implements ILoginService {
     private final AdminRepository adminRepository;
     private final PassengerRepository passengerRepository;
     private final LoginRepository loginRepository;
@@ -20,13 +22,20 @@ public class LoginService implements ILoginService{
 
     @Override
     public User loginUser(String email, String password) {
-        Admin admin=adminRepository.findAdmin(email);
-        if(admin!=null) return admin;
+        Passenger passenger = passengerRepository.getPassengerByEmail(email);
+        if (passenger != null && PasswordUtil.checkPassword(password, passenger.getPassword())) {
+            return passenger;
+        }
 
-        Passenger passenger=passengerRepository.getPassengerByEmail(email);
-        if(passenger!=null) return passenger;
+        Admin admin = adminRepository.findAdmin(email);
+        if (admin != null) {
+            System.out.println("Entered password hashed: " + PasswordUtil.encryptPassword(password));
+            System.out.println("Stored password hash: " + admin.getPassword());
+            if (PasswordUtil.checkPassword(password, admin.getPassword())) {
+                return admin;
+            }
+        }
 
-        return null;
-
+        return null; // Not found
     }
 }

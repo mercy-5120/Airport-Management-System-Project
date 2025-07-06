@@ -69,7 +69,11 @@ public class UIUtils {
 
         button.setFocusPainted(false);
         button.setMaximumSize(new Dimension(180, 40));
-        button.setBackground(new Color(170, 153, 146));
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+
+        button.setFocusPainted(false);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

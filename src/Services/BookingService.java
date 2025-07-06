@@ -1,35 +1,49 @@
 package Services;
 
 import Models.Booking;
+import Models.Flight;
 import Repositories.BookingRepository;
+import Repositories.FlightRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class BookingService implements IBookingService {
+    private final BookingRepository bookingRepo;
+    private final FlightRepository flightRepo;
 
-    private BookingRepository bookingRepository;
-
-    public BookingService() {
-        this.bookingRepository = new BookingRepository();
+    public BookingService(BookingRepository bookingRepo, FlightRepository flightRepo) {
+        this.bookingRepo = bookingRepo;
+        this.flightRepo = flightRepo;
     }
 
     @Override
-    public void bookFlight(Booking booking) {
-        bookingRepository.saveBooking(booking);
+    public boolean bookFlight(int userId, String flightId) throws SQLException {
+        Flight flight = flightRepo.getFlight(flightId);
+        if (flight != null && flight.getCapacity() > 0) {
+            bookingRepo.addBooking(userId, flightId);
+            flightRepo.updateAvailableSeats(flightId);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void cancelBooking(String bookingId) {
-        bookingRepository.deleteBooking(bookingId);
+    public boolean cancelBooking(int userId, String flightId) throws SQLException {
+        Flight flight = flightRepo.getFlight(flightId);
+        if (flight != null) {
+            bookingRepo.cancelBooking(userId, flightId);
+            flightRepo.updateAvailableSeats(flightId);
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    public Booking getBookingById(String bookingId) {
-        return bookingRepository.getBookingById(bookingId);
-    }
 
     @Override
-    public List<Booking> getBookingsByPassengerId(String passengerId) {
-        return bookingRepository.getBookingsByPassengerId(passengerId);
+    public List<Booking> viewBookingHistory(int userId) throws SQLException {
+        return bookingRepo.getBookingsForUser(userId);
     }
+
+
 }

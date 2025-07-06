@@ -1,5 +1,6 @@
 package UI;
 
+import Models.Passenger;
 import Models.Role;
 import Models.User;
 import Services.ILoginService;
@@ -90,8 +91,13 @@ this.manager=manager;
                     JOptionPane.showMessageDialog(this, "Login successful. Welcome, " + user.getFullname() + "!", "Login Successful", JOptionPane.INFORMATION_MESSAGE);
 
                     if (user.getRole() == Role.passenger) {
+                        Passenger passenger = manager.getPassengerService().getPassengerByEmail(email);
+                        container.add(new PassengerDashboard(layout, container, manager,passenger), "PassengerDashboard");
+
                         layout.show(container, "PassengerDashboard");
                     } else if (user.getRole() == Role.admin) {
+                        container.add(new AdminDashboard(layout, container, manager), "AdminDashboard");
+
                         layout.show(container, "AdminDashboard");
                     }
                 } else {

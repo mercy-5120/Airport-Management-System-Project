@@ -1,5 +1,8 @@
 package UI;
 
+import Models.Passenger;
+import SkyportManager.SkyPortManager;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -7,20 +10,19 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 
 public class PassengerDashboard extends JPanel {
-    public PassengerDashboard(String username, JFrame parentFrame) {
+    private SkyPortManager manager;
+
+    public PassengerDashboard(CardLayout layout, JPanel container, SkyPortManager manager, Passenger passenger) {
+        this.manager = manager;
         setLayout(new BorderLayout());
-        JFrame frame = new JFrame("Passenger Dashboard");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600);
-        frame.setLocationRelativeTo(null);
-        frame.setContentPane(new PassengerDashboard("UserName", frame));
+
 
 
         // Sidebar
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(new Color(92, 78, 78));
-        sidebar.setPreferredSize(new Dimension(150, 0));
+        sidebar.setPreferredSize(new Dimension(180, 0));
 
         // Logo
         ImageIcon originalIcon = new ImageIcon("Src/Assets/logo.png");
@@ -32,96 +34,60 @@ public class PassengerDashboard extends JPanel {
         sidebar.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // Sidebar buttons
-        String[] buttons = {"VIEW FLIGHTS", "BOOK FLIGHT", "CANCEL FLIGHT", "BOOKING HISTORY", "LOG OUT"};
-        for (String btnText : buttons) {
-            JButton btn = new JButton(btnText);
-            btn.setMaximumSize(new Dimension(140, 40));
-            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            styleButton(btn);
 
-            if (btnText.equals("LOG OUT")) {
-                sidebar.add(Box.createVerticalGlue());
-                btn.setForeground(Color.WHITE);
-                btn.setBackground(Color.decode("#E0BD3B"));
-                btn.addActionListener(e -> System.exit(0));
-                sidebar.add(Box.createRigidArea(new Dimension(0, 20)));
-                sidebar.add(btn);
-                continue;
-            }
+        JButton viewFlightBtn = new JButton("VIEW FLIGHTS");
+        viewFlightBtn.setBackground(new Color(92, 78, 78));
+        UIUtils.styleButtonDash(viewFlightBtn);
+        sidebar.add(viewFlightBtn);
+        sidebar.add(Box.createVerticalStrut(10));
 
-            // Link CANCEL FLIGHT to PassengerDashboard2
-            if (btnText.equals("CANCEL FLIGHT")) {
-                btn.addActionListener(e -> {
-                    parentFrame.setContentPane(new PassengerDashboard2(username, parentFrame));
-                    parentFrame.revalidate();
-                });
-            }
+        JButton bookedFlightBtn = new JButton("BOOKED FLIGHTS");
+        UIUtils.styleButtonDash(bookedFlightBtn);
+        sidebar.add(bookedFlightBtn);
+        sidebar.add(Box.createVerticalStrut(10));
 
-            // Link BOOKING HISTORY to PassengerDashboard4
-            if (btnText.equals("BOOKING HISTORY")) {
-                btn.addActionListener(e -> {
-                    parentFrame.setContentPane(new PassengerDashboard4(username, parentFrame));
-                    parentFrame.revalidate();
-                });
-            }
+        JButton historyFlightBtn = new JButton("BOOKING HISTORY ");
+        UIUtils.styleButtonDash(historyFlightBtn);
+        sidebar.add(historyFlightBtn);
+        sidebar.add(Box.createVerticalStrut(10));
 
-            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-            sidebar.add(btn);
-        }
+
+        JButton logoutBtn = new JButton("LOG OUT ⤴");
+        UIUtils.styleButton(logoutBtn);
+        logoutBtn.setMaximumSize(new Dimension(160, 40));
+        logoutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sidebar.add(logoutBtn);
+        sidebar.add(Box.createVerticalStrut(20));
 
         // Main content panel
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        CardLayout mainCardLayout = new CardLayout();
+        JPanel mainPanel = new JPanel(mainCardLayout);
+        mainPanel.setBackground(Color.WHITE);
+        mainPanel.add(new PassengerView(manager,passenger), "view");
+        mainPanel.add(new BookedFlightsView(manager, passenger.getUserId()), "booked");
+        mainPanel.add(new BookingHistoryView(manager, passenger.getUserId()), "history");
 
-        JLabel welcome = new JLabel("WELCOME " + username.toUpperCase(), SwingConstants.CENTER);
-        welcome.setFont(new Font("Inter", Font.BOLD, 18));
-        welcome.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
-        mainPanel.add(welcome, BorderLayout.NORTH);
 
-        JLabel sectionTitle = new JLabel("AVAILABLE FLIGHTS", SwingConstants.CENTER);
-        sectionTitle.setFont(new Font("Inter", Font.BOLD, 16));
-        sectionTitle.setForeground(new Color(218, 165, 32));
-        sectionTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        mainPanel.add(sectionTitle, BorderLayout.CENTER);
 
-        // Table setup
-        String[] column = {"FLIGHT NO", "ORIGIN", "DESTINATION", "DEPARTURE", "ARRIVAL", "DATE", "AVAILABLE SEATS"};
-        DefaultTableModel tableModel = new DefaultTableModel(column, 0);
-        JTable flightTable = new JTable(tableModel);
 
-        flightTable.setFont(new Font("Inter", Font.PLAIN, 14));
-        flightTable.setRowHeight(30);
-        flightTable.setShowGrid(true);
-        flightTable.setGridColor(Color.GRAY);
+        mainCardLayout.show(mainPanel, "view");
 
-        JTableHeader header = flightTable.getTableHeader();
-        header.setFont(new Font("Inter", Font.BOLD, 14));
-        ((DefaultTableCellRenderer) header.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        for (int i = 0; i < flightTable.getColumnCount(); i++) {
-            flightTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-        }
-
-        flightTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (!isSelected) {
-                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
-                }
-                return c;
-            }
+        // Sidebar button actions
+        viewFlightBtn.addActionListener(e -> mainCardLayout.show(mainPanel, "view"));
+        bookedFlightBtn.addActionListener(e -> {
+            BookedFlightsView bookedFlightsView = (BookedFlightsView) mainPanel.getComponent(1);
+            bookedFlightsView.refresh();  // refresh when opening booked flights
+            mainCardLayout.show(mainPanel, "booked");
         });
 
-        JScrollPane scrollPane = new JScrollPane(flightTable);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
-        mainPanel.add(scrollPane, BorderLayout.SOUTH);
+        historyFlightBtn.addActionListener(e -> mainCardLayout.show(mainPanel, "history"));
+
+        logoutBtn.addActionListener(e ->
+                layout.show(container, "login"));
 
         add(sidebar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
-        frame.setVisible(true);
+
     }
 
     private void styleButton(JButton btn) {
@@ -132,6 +98,5 @@ public class PassengerDashboard extends JPanel {
         btn.setFocusPainted(false);
     }
 
+    }
 
-
-}

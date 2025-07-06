@@ -2,11 +2,13 @@ package Services;
 
 import Models.Booking;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IBookingService {
-    void bookFlight(Booking booking);
-    void cancelBooking(String bookingId);
-    Booking getBookingById(String bookingId);
-    List<Booking> getBookingsByPassengerId(String passengerId);
+    boolean bookFlight(int userId, String flightId) throws SQLException;
+    boolean cancelBooking(int userId, String flightId) throws SQLException;
+
+
+    List<Booking> viewBookingHistory(int userId) throws SQLException;
 }

@@ -1,7 +1,6 @@
 package UI;
 
 import Models.Flight;
-import Models.FlightStatus;
 import SkyportManager.SkyPortManager;
 
 import javax.swing.*;
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 public class AdminAddFlight extends JPanel {
     private final SkyPortManager manager;
 
-    public AdminAddFlight(SkyPortManager manager) {
+    public AdminAddFlight(SkyPortManager manager, AdmView admView) {
         this.manager = manager;
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE);
@@ -77,11 +76,7 @@ public class AdminAddFlight extends JPanel {
         gbc.gridx = 1;
         add(price, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
-        add(new JLabel("STATUS:"), gbc);
-        JComboBox<FlightStatus> statusCombo = new JComboBox<>(FlightStatus.values());
-        gbc.gridx = 1;
-        add(statusCombo, gbc);
+
 
         gbc.gridx = 0; gbc.gridy++;
         gbc.gridwidth = 2;
@@ -100,7 +95,6 @@ public class AdminAddFlight extends JPanel {
                 LocalDate flightDate = LocalDate.parse(date.getText().trim());
                 int flightSeats = Integer.parseInt(seats.getText().trim());
                 BigDecimal flightPrice = BigDecimal.valueOf(Double.parseDouble(price.getText().trim()));
-                FlightStatus flightStatus = (FlightStatus) statusCombo.getSelectedItem();
 
                 if (flightNumber.isEmpty() || flightOrigin.isEmpty() || flightDestination.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);

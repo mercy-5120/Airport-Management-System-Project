@@ -26,16 +26,15 @@ public class PassengerService implements IPassengerService{
         passengerRepository.addPassenger(passenger);
     }
 
+
+
+
     @Override
     public Passenger getPassengerByEmail(String email) {
         return passengerRepository.getPassengerByEmail(email);
     }
 
 
-    @Override
-    public List<Booking> viewBookingHistory(String passengerId){
-        return BookingRepository.getBookingsByPassengerId(passengerId);
-         return List.of();
-    }
+
 
 }

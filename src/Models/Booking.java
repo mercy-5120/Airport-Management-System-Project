@@ -1,45 +1,52 @@
 package Models;
 
-import java.sql.Timestamp;
-
 public class Booking {
-    private String bookingId;
-    private String passengerId;
-    private String flightId;
-    private Timestamp bookingTime;
+    private int bookingId;
+    private String userId;
+    private String flightNo;
+    private Status status;
+    private Flight flight;
 
-    public Booking(String bookingId, String passengerId, String flightId, Timestamp bookingTime) {
+    public Flight getFlight() { return flight; }
+    public void setFlight(Flight flight) { this.flight = flight; }
+
+
+    public Booking(int bookingId, String userId, String flightNo, Status status) {
         this.bookingId = bookingId;
-        this.passengerId = passengerId;
-        this.flightId = flightId;
-        this.bookingTime = bookingTime;
+        this.userId = userId;
+        this.flightNo = flightNo;
+        this.status = status;
     }
 
-    public String getBookingId() {
+    public int getBookingId() {
         return bookingId;
     }
-    public void setBookingId(String bookingId) {
+    public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
     }
 
-    public String getPassengerId() {
-        return passengerId;
+
+
+    public String getFlightNo() {
+        return flightNo;
     }
-    public void setPassengerId(String passengerId) {
-        this.passengerId = passengerId;
-    }
-    public String getFlightId() {
-        return flightId;
-    }
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
+    public void setFlightNo(String flightNo) {
+        this.flightNo = flightNo;
     }
 
-    public Timestamp getBookingTime() {
-        return bookingTime;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setBookingTime(Timestamp bookingTime) {
-        this.bookingTime = bookingTime;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

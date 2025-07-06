@@ -2,6 +2,7 @@ package Repositories;
 
 import Models.Flight;
 import Models.Passenger;
+import Models.Role;
 import Services.IPassengerService;
 import dbUtil.DatabaseManager;
 
@@ -37,13 +38,19 @@ public class PassengerRepository  {
         }
     }
 
-    public Passenger getPassengerByEmail(String email)  {
-        String sql = "SELECT * FROM users WHERE email=?";
+    public Passenger getPassengerByEmail(String email) {
+        String sql = "SELECT user_id, fullname, email, password FROM users WHERE email=? AND role='passenger'";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Passenger(rs.getString("user_id"), rs.getString("fullname"), rs.getString("email"));
+                    Passenger passenger = new Passenger();
+                    passenger.setUserId(rs.getInt("user_id"));
+                    passenger.setFullname(rs.getString("fullname"));
+                    passenger.setEmail(rs.getString("email"));
+                    passenger.setPassword(rs.getString("password")); // ✅ Required for login check
+                    passenger.setRole(Role.passenger);               // ✅ Required for role-based UI
+                    return passenger;
                 }
             }
         } catch (SQLException e) {
@@ -52,13 +59,14 @@ public class PassengerRepository  {
         return null;
     }
 
+
     public List<Passenger> getAllPassengers() {
         List<Passenger> passengers=new ArrayList<>();
         String sql="SELECT * FROM users WHERE role='PASSENGER'";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                passengers.add(new Passenger(rs.getString("user_id"), rs.getString("fullname"), rs.getString("email")));
+                passengers.add(new Passenger(rs.getInt("user_id"),rs.getString("fullname"),rs.getString("email"),rs.getString("password")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

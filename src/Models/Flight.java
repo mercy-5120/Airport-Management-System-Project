@@ -2,10 +2,9 @@ package Models;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Flight {
-    private String flightID;
+    private int flightID;
     private String flightNo;
     private String origin;
     private String destination;
@@ -14,10 +13,13 @@ public class Flight {
     private LocalDate date;
     private int capacity;
     private BigDecimal price;
-   private FlightStatus flightStatus;
 
-    public Flight(String flightID) {
-        this.flightID = flightID;
+    public Flight(String flightNo, String origin, String destination, String departureTime, int availableSeats) {
+        this.flightNo = flightNo;
+        this.origin = origin;
+        this.destination = destination;
+        this.departureTime = departureTime;
+        this.capacity = availableSeats;
     }
 
     public Flight(String flightNo, String origin, String departureTime, String destination, String arrivalTime, LocalDate date, int capacity, BigDecimal price) {
@@ -29,14 +31,13 @@ public class Flight {
         this.date = date;
         this.capacity = capacity;
         this.price = price;
-        this.flightStatus = flightStatus;
     }
 
-    public String getFlightID() {
+    public int getFlightID() {
         return flightID;
     }
 
-    public void setFlightID(String flightID) {
+    public void setFlightID(int flightID) {
         this.flightID = flightID;
     }
 
@@ -104,11 +105,5 @@ public class Flight {
         this.price = price;
     }
 
-    public FlightStatus getFlightStatus() {
-        return flightStatus;
-    }
 
-    public void setFlightStatus(FlightStatus flightStatus) {
-        this.flightStatus = flightStatus;
-    }
 }

@@ -20,6 +20,18 @@ public class User{
         this(-1, fullname, email, password, role);
     }
 
+    public User() {
+
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public String getFullname() {
         return fullname;
     }

@@ -44,7 +44,7 @@ public class FlightRepository  {
             stmt.setDate(6, Date.valueOf(flight.getDate()));
             stmt.setInt(7, flight.getCapacity());
             stmt.setBigDecimal(8, flight.getPrice());
-            stmt.setString(9, flight.getFlightID());
+            stmt.setInt(9, flight.getFlightID());
             stmt.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
@@ -55,9 +55,9 @@ public class FlightRepository  {
 
 
     public void deleteFlight(Flight flight) {
-        String sql="DELETE FROM flight WHERE flight_id=?";
+        String sql="DELETE FROM flight WHERE flight_number=?";
         try(PreparedStatement stmt=conn.prepareStatement(sql)){
-            stmt.setString(1,flight.getFlightID());
+            stmt.setString(1,flight.getFlightNo());
             stmt.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
@@ -92,5 +92,35 @@ public class FlightRepository  {
         }
 
         return flights;
+    }
+
+    public void updateAvailableSeats(String flightId) throws SQLException {
+        String sql = "UPDATE flight SET available_seats=available_seats-1 WHERE flight_number=? and available_seats>0";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, flightId);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("No rows updated; either flight ID invalid or no seats left.");
+            }
+        }
+    }
+
+    public Flight getFlight(String flightNo) throws SQLException {
+        String sql = "SELECT * FROM flight WHERE flight_number=?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, flightNo);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Flight(
+                            rs.getString("flight_number"),
+                            rs.getString("origin"),
+                            rs.getString("destination"),
+                            rs.getString("departure_time"),
+                            rs.getInt("available_seats")
+                    );
+                }
+            }
+        }
+        return null;
     }
 }

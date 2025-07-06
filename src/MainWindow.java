@@ -24,8 +24,6 @@ public class MainWindow extends JFrame {
         container.add(new SignUpForm(cardLayout, container, manager), "signup");
 
         // Add dashboards to the container so CardLayout knows them:
-//        container.add(new PassengerDashboard("Passenger", this), "PassengerDashboard");
-        container.add(new AdminDashboard(cardLayout, container, manager), "AdminDashboard");
 
         add(container);
 
@@ -39,7 +37,7 @@ public class MainWindow extends JFrame {
             dbManager.connect();
             Connection conn = dbManager.getConnection();
 
-            // Build your SkyPortManager with the established connection:
+            // Build your SkyPortManager with thbe established connection:
             SkyPortManager manager = new SkyPortManager(conn);
 
             // Start the Swing UI, passing manager to MainWindow
