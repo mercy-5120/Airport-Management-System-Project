@@ -15,6 +15,7 @@ import java.util.List;
 public class AdmEdit extends JPanel {
     private IFlightService flightService;
     private IAdminService adminService;
+    private DefaultTableModel model;
 
     public AdmEdit(SkyPortManager manager) {
         this.flightService = manager.getFlightService();
@@ -27,12 +28,10 @@ public class AdmEdit extends JPanel {
         title.setForeground(new Color(218, 165, 32));
         add(title, BorderLayout.NORTH);
 
-        String[] columns = {"FLIGHT ID", "ORIGIN", "DESTINATION", "DEPARTURE", "ARRIVAL", "DATE", "AVAILABLE SEATS", "PRICE"};
-        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+        String[] columns = {"FLIGHT NO", "ORIGIN", "DESTINATION", "DEPARTURE", "ARRIVAL", "DATE", "AVAILABLE SEATS", "PRICE"};
+        model = new DefaultTableModel(columns, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+            public boolean isCellEditable(int row, int column) { return false; }
         };
 
         JTable table = new JTable(model);
@@ -101,6 +100,14 @@ public class AdmEdit extends JPanel {
             }
         });
 
+        refresh(); // load initial data
+    }
+
+    /**
+     * Reloads the flights table with fresh data from the database.
+     */
+    public void refresh() {
+        model.setRowCount(0); // clear existing rows
         try {
             List<Flight> flights = flightService.getAllFlights();
             for (Flight f : flights) {
@@ -118,7 +125,7 @@ public class AdmEdit extends JPanel {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading flights: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error refreshing flights: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

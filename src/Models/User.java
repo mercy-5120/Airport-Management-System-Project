@@ -1,6 +1,6 @@
 package Models;
 
-import dbUtil.*;
+
 
 public class User{
     private int userId;

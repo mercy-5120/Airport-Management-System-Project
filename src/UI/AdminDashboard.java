@@ -73,11 +73,13 @@ public class AdminDashboard extends JPanel {
 
         // Sidebar button actions
         addFlightBtn.addActionListener(e -> mainCardLayout.show(mainPanel, "add"));
-        editFlightBtn.addActionListener(e -> mainCardLayout.show(mainPanel, "edit"));
+        editFlightBtn.addActionListener(e ->{
+            AdmEdit admEdit= (AdmEdit) mainPanel.getComponent(1);  // update the index if needed
+            admEdit.refresh();
+            mainCardLayout.show(mainPanel, "edit");});
         deleteFlightBtn.addActionListener(e -> mainCardLayout.show(mainPanel, "delete"));
         viewPassengersBtn.addActionListener(e -> {
-            AdmViewPassengers viewPassengersPanel = (AdmViewPassengers) mainPanel.getComponent(3);  // update the index if needed
-            viewPassengersPanel.refresh();
+
             mainCardLayout.show(mainPanel, "viewPassengers");
 
         });
